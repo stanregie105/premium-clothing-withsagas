@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import './sign-in.styles.scss';
 import FormInput from '../form-input/form-input.component.jsx';
@@ -6,28 +6,22 @@ import CustomButton from '../custom-button/custom-button.component.jsx';
 import { googleSignInStart, emailSignInStart} from '../../redux/user/user.actions';
 import {connect} from 'react-redux';
 
-class SignIn extends React.Component{
-    constructor(props){
-        super(props);
-        this.state={
-            email:'',
-            password:''
-        }
-    }
-    handleSubmit= async event=>{
+const SignIn=({emailSignInStart},{googleSignInStart})=>{
+  const [userCredentials, setCredentials] = useState({ email:'', password:''});
+   
+  const { email, password} = userCredentials;
+
+   const handleSubmit= async event=>{
       event.preventDefault();
-      const { email, password} = this.state;
-      const {emailSignInStart} = this.props;
       emailSignInStart(email, password);
     }
 
-    handleChange=(event)=>{
+   const handleChange=(event)=>{
 
       const { name, value} = event.target;
-      this.setState({ [name]:value})
+      setCredentials({...userCredentials, [name]:value});
     }
-    render(){
-        const {googleSignInStart}= this.props;
+    
         return(
            <div className="sign-in">  
              <h2>I already have an acount</h2>
@@ -36,7 +30,7 @@ class SignIn extends React.Component{
                  <FormInput 
                  name='email' 
                  type='email' 
-                 value={this.state.email}
+                 value={email}
                  handleChange={this.handleChange}
                  label='email' 
                  required/>
@@ -44,7 +38,7 @@ class SignIn extends React.Component{
                  <FormInput 
                  name='password' 
                  type='password' 
-                 value={this.state.password}
+                 value={password}
                  handleChange={this.handleChange}
                  label='password'
                   required/>
@@ -56,7 +50,7 @@ class SignIn extends React.Component{
            </div> 
         )
     }
-}
+
 
 const mapDispatchToProps = dispatch=>({
     googleSignInStart: ()=>dispatch(googleSignInStart()),

@@ -1,4 +1,4 @@
-import React,{ Component}  from 'react';
+import React,{useEffect}  from 'react';
 import {Switch,Route, Redirect} from 'react-router-dom';
 import HomePage from './pages/homepage/homepage.component'
 import ShopPage from './pages/shop/shop.component.jsx';
@@ -9,25 +9,20 @@ import {createStructuredSelector} from 'reselect';
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
 import CheckoutPage from './pages/checkout/checkout.component';
 import './App.css';
-import { auth, createUserProfileDocument} from './firebase/firebase.utils';
 import { checkUserSession} from './redux/user/user.actions';
 //import CardList from './card';
 
 
 
-class App extends Component{
+const App =({checkUserSession, currentUser})=>{
 
- unsubscribeFromAuth = null;
 
- componentDidMount(){
- const {checkUserSession}= this.props;
- checkUserSession();
- }
- componentWillUnmount(){
-   this.unsubsrcibeFromAuth();
- }
+useEffect(()=>{
+   checkUserSession();
+},[checkUserSession])
 
-  render(){ 
+
+  
     return (
 
       <div>
@@ -48,7 +43,7 @@ class App extends Component{
      );
 
   }
-}
+
 const mapStateToProps=createStructuredSelector({
   currentUser: selectCurrentUser
 });
